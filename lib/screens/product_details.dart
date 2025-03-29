@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recyclick/screens/product_specs.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   @override
@@ -146,12 +147,18 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                // Form is valid: show SnackBar (submission logic can be added here).
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Submitting Details')),
-                                );
-                              }
+                              // if (_formKey.currentState!.validate()) {
+                              //   // Form is valid: show SnackBar (submission logic can be added here).
+                              //   ScaffoldMessenger.of(context).showSnackBar(
+                              //     SnackBar(content: Text('Submitting Details')),
+                              //   );
+                              // }
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProductSpecsPage(),
+                                ),
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color(0xFF1BA133),
