@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recyclick/screens/device_selection.dart';
 
 class AddItemPage extends StatelessWidget {
   @override
@@ -83,7 +84,12 @@ class AddItemPage extends StatelessWidget {
                   width: double.infinity,
                   child: OutlinedButton(
                     onPressed: () {
-                      // Implement button action here.
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DeviceTypeSelectionPage(),
+                        ),
+                      );
                     },
                     style: OutlinedButton.styleFrom(
                       backgroundColor: Color(0xFFD9D9D9),
