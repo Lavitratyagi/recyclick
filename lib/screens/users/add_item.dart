@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:recyclick/screens/device_selection.dart';
+import 'package:recyclick/screens/users/device_selection.dart';
 
 class AddItemPage extends StatelessWidget {
   @override

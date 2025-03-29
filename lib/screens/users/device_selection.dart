@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:recyclick/screens/image_upload.dart';
+import 'package:recyclick/screens/users/image_upload.dart';
 
 class DeviceTypeSelectionPage extends StatelessWidget {
   // List of product image asset paths.

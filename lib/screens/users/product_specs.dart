@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:recyclick/screens/order_confirm.dart';
+import 'package:recyclick/screens/users/order_confirm.dart';
 
 class ProductSpecsPage extends StatefulWidget {
   @override

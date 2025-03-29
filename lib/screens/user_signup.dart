@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:recyclick/screens/user_navigation.dart';
+import 'package:recyclick/screens/users/user_navigation.dart';
 
 class UserSignupPage extends StatefulWidget {
   @override

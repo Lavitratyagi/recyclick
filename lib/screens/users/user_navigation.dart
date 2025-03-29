@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:recyclick/screens/add_item.dart';
+import 'package:recyclick/screens/users/add_item.dart';
+import 'package:recyclick/screens/users/home.dart';
+import 'package:recyclick/screens/users/user_profile.dart';
 
 class UserHomePage extends StatefulWidget {
   @override
@@ -12,11 +14,11 @@ class _UserHomePageState extends State<UserHomePage> {
 
   // List of pages for the bottom navigation bar.
   final List<Widget> _pages = [
-    HomeScreen(),    // Home page placeholder
-    RewardScreen(),  // Reward page placeholder
-    AddItemPage(),      // Plus page (custom page)
-    PinScreen(),     // Pin page placeholder
-    AccountScreen(), // Account page placeholder
+    HomePage(), // Home page placeholder
+    RewardScreen(), // Reward page placeholder
+    AddItemPage(), // Plus page (custom page)
+    PinScreen(), // Pin page placeholder
+    UserProfilePage(), // Account page placeholder
   ];
 
   @override
@@ -42,10 +44,7 @@ class _UserHomePageState extends State<UserHomePage> {
         showSelectedLabels: false,
         showUnselectedLabels: false,
         items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
             icon: Icon(Icons.card_giftcard), // giftbox-type icon for reward.
             label: 'Reward',
@@ -68,14 +67,6 @@ class _UserHomePageState extends State<UserHomePage> {
   }
 }
 
-// Dummy Home Screen placeholder.
-class HomeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text("Home Screen"));
-  }
-}
-
 // Dummy Reward Screen placeholder.
 class RewardScreen extends StatelessWidget {
   @override
@@ -89,13 +80,5 @@ class PinScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(child: Text("Pin Screen"));
-  }
-}
-
-// Dummy Account Screen placeholder.
-class AccountScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text("Account Screen"));
   }
 }

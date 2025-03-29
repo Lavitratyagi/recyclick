@@ -69,7 +69,6 @@ class OrderConfirmationPage extends StatelessWidget {
                     width: 200,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Add your track order logic here.
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF1BA133),

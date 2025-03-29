@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:recyclick/screens/product_details.dart';
+import 'package:recyclick/screens/users/product_details.dart';
 
 class PhotoUploadPage extends StatefulWidget {
   @override
