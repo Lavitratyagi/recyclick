@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:recyclick/screens/account_type.dart';
 
 class LoginPage extends StatelessWidget {
   // Function for "Create Account" tap action
   void _onCreateAccountTap(BuildContext context) {
-    // Navigate to Create Account page or show a dialog
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Create Account tapped!')),
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AccountType()),
     );
   }
 
@@ -17,108 +18,107 @@ class LoginPage extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           // Full-screen background image
-          Image.asset(
-            'assets/main_bg.png',
-            fit: BoxFit.cover,
-          ),
+          Image.asset('assets/main_bg.png', fit: BoxFit.cover),
           // Overlay for the login form
           SingleChildScrollView(
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 60.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Heading
+                  // Heading with Montserrat font, size 36, aligned to left
                   Text(
                     'Click. Track. Recycle',
                     style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Montserrat',
+                      fontSize: 40,
+                      fontWeight: FontWeight.w900, // Extra bold weight
                       color: Colors.black,
                     ),
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                   ),
+
                   SizedBox(height: 10),
-                  // Subtext
-                  Text(
-                    'Give old gadgets a second life instead of tossing them',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black87,
+                  // Subtext remains centered as before
+                  Center(
+                    child: Text(
+                      'Give old gadgets a second life instead of tossing them',
+                      style: TextStyle(fontSize: 16, color: Colors.black87),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 40),
                   // Container with white background and 60% opacity for text fields and buttons
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.6),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      children: [
-                        // Aadhar Number TextField
-                        TextField(
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            labelText: 'Aadhar Number',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        // Password TextField
-                        TextField(
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        SizedBox(height: 30),
-                        // Login Button
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Add login functionality here
-                            },
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Color(0xFF1BA1332 & 0xFFFFFFFF), // Use the hex color code. Note: Fixing the hex.
-                              backgroundColor: Color(0xFF1BA133), // Corrected hex color: remove extra digit
-                              padding: EdgeInsets.symmetric(vertical: 15),
-                            ),
-                            child: Text(
-                              'Login',
-                              style: TextStyle(fontSize: 18),
+                  Center(
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.6),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        children: [
+                          // Aadhar Number TextField
+                          TextField(
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: 'Aadhar Number',
+                              border: OutlineInputBorder(),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 20),
-                        // "Not register yet? Create Account" text
-                        GestureDetector(
-                          onTap: () => _onCreateAccountTap(context),
-                          child: RichText(
-                            text: TextSpan(
-                              text: 'Not register yet? ',
-                              style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 16,
+                          SizedBox(height: 20),
+                          // Password TextField
+                          TextField(
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          SizedBox(height: 30),
+                          // Login Button
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // Add login functionality here
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF1BA133),
+                                foregroundColor: Colors.black,
+                                padding: EdgeInsets.symmetric(vertical: 15),
                               ),
-                              children: [
-                                TextSpan(
-                                  text: 'Create Account',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    decoration: TextDecoration.underline,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                              ],
+                              child: Text(
+                                'Login',
+                                style: TextStyle(fontSize: 18),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 20),
+                          // "Not register yet? Create Account" text
+                          GestureDetector(
+                            onTap: () => _onCreateAccountTap(context),
+                            child: RichText(
+                              text: TextSpan(
+                                text: 'Not register yet? ',
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 16,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: 'Create Account',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
