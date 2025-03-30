@@ -30,7 +30,6 @@ class ApiService {
         headers: {'Content-Type': 'application/json'},
         body: body,
       );
-      print(response.body);
       if (response.body == 'true') {
         return true;
       } else {
@@ -39,6 +38,29 @@ class ApiService {
       }
     } catch (e) {
       print('Exception: $e');
+      return false;
+    }
+  }
+
+  Future<bool> login({
+    required String role,
+    required int aadhar,
+    required String password,
+  }) async {
+    final url = Uri.parse('$_baseUrl/account/$role/login').replace(
+      queryParameters: {'aadhar': aadhar.toString(), 'password': password},
+    );
+
+    try {
+      final response = await http.get(url);
+      if (response.body == 'true') {
+        return true;
+      } else {
+        print('Login error: ${response.statusCode} - ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Login exception: $e');
       return false;
     }
   }
