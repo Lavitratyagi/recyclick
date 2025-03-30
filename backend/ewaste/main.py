@@ -253,11 +253,9 @@ async def add_vendor(order_id: str):
     return True
 
 
-@app.get('/get/vendor/{order_id}')
-async def get_vendor(order_id: str):
-    if order_id in vendor:
-        return True
-    return False
+@app.get('/get/vendor/')
+async def get_vendor():
+    return vendor
 
 
 @app.get('/add/collection_center/{order_id}')
