@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:recyclick/Api%20Service/api_service.dart';
 import 'package:recyclick/screens/users/product_specs.dart';
 
 class ProductDetailsPage extends StatefulWidget {
+  final String verificationResponse; // Received from image upload page
+
+  const ProductDetailsPage({Key? key, required this.verificationResponse})
+    : super(key: key);
+
   @override
   _ProductDetailsPageState createState() => _ProductDetailsPageState();
 }
@@ -16,10 +22,64 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   final TextEditingController _imeiController = TextEditingController();
   final TextEditingController _colourController = TextEditingController();
 
+  bool _isLoading = false;
+
+  Future<void> _submitDetails() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    // Retrieve entered details.
+    final String company = _companyController.text;
+    final String model = _modelController.text;
+    final String variant = _variantController.text;
+    final String imei = _imeiController.text;
+    final String colour = _colourController.text;
+    final String verificationResponse = widget.verificationResponse;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Call API service to submit product details.
+      final responseText = await ApiService().submitProductDetails(
+        company: company,
+        model: model,
+        variant: variant,
+        imei: imei,
+        colour: colour,
+        verificationResponse: verificationResponse,
+      );
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder:
+              (context) => ProductSpecsPage(
+                verificationResponse: verificationResponse,
+                productResponse: responseText,
+              ),
+        ),
+      );
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false, // Prevents background shifting
+      resizeToAvoidBottomInset: false, // Prevents background shifting.
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -146,33 +206,27 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {
-                              // if (_formKey.currentState!.validate()) {
-                              //   // Form is valid: show SnackBar (submission logic can be added here).
-                              //   ScaffoldMessenger.of(context).showSnackBar(
-                              //     SnackBar(content: Text('Submitting Details')),
-                              //   );
-                              // }
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProductSpecsPage(),
-                                ),
-                              );
-                            },
+                            onPressed: _submitDetails,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color(0xFF1BA133),
                               padding: EdgeInsets.symmetric(vertical: 15),
                             ),
-                            child: Text(
-                              'Submit',
-                              style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
+                            child:
+                                _isLoading
+                                    ? CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white,
+                                      ),
+                                    )
+                                    : Text(
+                                      'Submit',
+                                      style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                           ),
                         ),
                       ],

@@ -114,4 +114,47 @@ class ApiService {
       throw Exception('Network error: ${e.toString()}');
     }
   }
+
+  Future<String> submitProductDetails({
+    required String company,
+    required String model,
+    required String variant,
+    required String imei,
+    required String colour,
+    required String verificationResponse,
+  }) async {
+    // Combine details into a single comma-separated string.
+    final details =
+        "$company,$model,$variant,$imei,$colour";
+
+    // Create URI with a single query parameter named "data".
+    final uri = Uri.parse('$_baseUrl/ai/gist/' + details);
+    final response = await http.get(uri);
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(
+        'Server error (${response.statusCode}): ${response.body}',
+      );
+    }
+  }
+
+  /// Wrapper function for consistency.
+  Future<String> submitProductDetailsWrapper({
+    required String company,
+    required String model,
+    required String variant,
+    required String imei,
+    required String colour,
+    required String verificationResponse,
+  }) {
+    return submitProductDetails(
+      company: company,
+      model: model,
+      variant: variant,
+      imei: imei,
+      colour: colour,
+      verificationResponse: verificationResponse,
+    );
+  }
 }

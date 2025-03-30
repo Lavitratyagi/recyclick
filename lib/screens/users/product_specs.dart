@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:recyclick/screens/users/order_confirm.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class ProductSpecsPage extends StatefulWidget {
+  final String verificationResponse;
+  final String productResponse;
+
+  const ProductSpecsPage({
+    Key? key,
+    required this.verificationResponse,
+    required this.productResponse,
+  }) : super(key: key);
+
   @override
   _ProductSpecsPageState createState() => _ProductSpecsPageState();
 }
@@ -9,9 +19,18 @@ class ProductSpecsPage extends StatefulWidget {
 class _ProductSpecsPageState extends State<ProductSpecsPage> {
   @override
   Widget build(BuildContext context) {
+    // Optionally, you can pre-process the strings to replace literal escape sequences.
+    // In many cases, if your backend sends text with "\n" and "\t", 
+    // MarkdownBody will render them appropriately.
+    final String verificationData = widget.verificationResponse
+        .replaceAll(r'\n', '\n')
+        .replaceAll(r'\t', '\t');
+    final String productData = widget.productResponse
+        .replaceAll(r'\n', '\n')
+        .replaceAll(r'\t', '\t');
+
     return Scaffold(
-      resizeToAvoidBottomInset:
-          false, // Prevents background shifting when keyboard appears.
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           // Full-screen background image.
@@ -20,12 +39,7 @@ class _ProductSpecsPageState extends State<ProductSpecsPage> {
           ),
           // Scrollable content.
           SingleChildScrollView(
-            padding: EdgeInsets.fromLTRB(
-              20,
-              40,
-              20,
-              100,
-            ), // Extra bottom padding for the button.
+            padding: EdgeInsets.fromLTRB(20, 40, 20, 100),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -46,7 +60,7 @@ class _ProductSpecsPageState extends State<ProductSpecsPage> {
                   ],
                 ),
                 SizedBox(height: 20),
-                // Centered header for the page.
+                // Centered header.
                 Center(
                   child: Text(
                     'Product Specifications',
@@ -60,21 +74,64 @@ class _ProductSpecsPageState extends State<ProductSpecsPage> {
                   ),
                 ),
                 SizedBox(height: 30),
-                // Additional content goes here.
-                // Example placeholder:
+                // Display the verification response using MarkdownBody.
                 Text(
-                  'Enter your product details and specifications here.',
+                  'Verification Response:',
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                SizedBox(height: 10),
+                MarkdownBody(
+                  data: verificationData,
+                  styleSheet: MarkdownStyleSheet(
+                    p: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 30),
+                // Display the product response using MarkdownBody.
+                Text(
+                  'Product Response:',
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                SizedBox(height: 10),
+                MarkdownBody(
+                  data: productData,
+                  styleSheet: MarkdownStyleSheet(
+                    p: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 30),
+                // Additional content placeholder.
+                Text(
+                  'Enter additional product details or specifications here if required.',
                   style: TextStyle(
                     fontFamily: 'Montserrat',
                     fontSize: 18,
                     color: Colors.black,
                   ),
                 ),
-                SizedBox(height: 300), // Placeholder for additional content.
+                SizedBox(height: 150), // Extra space for the bottom button.
               ],
             ),
           ),
-          // Positioned button at the bottom of the screen.
+          // Positioned button at the bottom.
           Positioned(
             bottom: 20,
             left: 20,

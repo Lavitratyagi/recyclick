@@ -67,7 +67,11 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
     // After receiving the response, navigate to the next page.
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ProductDetailsPage()),
+      MaterialPageRoute(
+        builder: (context) => ProductDetailsPage(
+          verificationResponse: responseText, // Pass response if needed.
+        ),
+      ),
     );
   }
 
@@ -79,7 +83,7 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
         fit: StackFit.expand,
         children: [
           // Full-screen background image.
-          Image.asset('assets/bg.png', fit: BoxFit.cover),
+          Image.asset('assets/user_bg.png', fit: BoxFit.cover),
           // Content overlay with scrolling support.
           SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
@@ -141,27 +145,26 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     alignment: Alignment.centerLeft,
-                    child:
-                        _frontImage != null
-                            ? Image.file(
-                              _frontImage!,
-                              height: 60,
-                              fit: BoxFit.contain,
-                            )
-                            : Row(
-                              children: [
-                                Icon(Icons.camera_alt, color: Colors.black),
-                                SizedBox(width: 10),
-                                Text(
-                                  'Upload Front Face',
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                  ),
+                    child: _frontImage != null
+                        ? Image.file(
+                            _frontImage!,
+                            height: 60,
+                            fit: BoxFit.contain,
+                          )
+                        : Row(
+                            children: [
+                              Icon(Icons.camera_alt, color: Colors.black),
+                              SizedBox(width: 10),
+                              Text(
+                                'Upload Front Face',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 18,
+                                  color: Colors.black,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
+                          ),
                   ),
                 ),
                 SizedBox(height: 15),
@@ -177,27 +180,26 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     alignment: Alignment.centerLeft,
-                    child:
-                        _backImage != null
-                            ? Image.file(
-                              _backImage!,
-                              height: 60,
-                              fit: BoxFit.contain,
-                            )
-                            : Row(
-                              children: [
-                                Icon(Icons.camera_alt, color: Colors.black),
-                                SizedBox(width: 10),
-                                Text(
-                                  'Upload Back Face',
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                  ),
+                    child: _backImage != null
+                        ? Image.file(
+                            _backImage!,
+                            height: 60,
+                            fit: BoxFit.contain,
+                          )
+                        : Row(
+                            children: [
+                              Icon(Icons.camera_alt, color: Colors.black),
+                              SizedBox(width: 10),
+                              Text(
+                                'Upload Back Face',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 18,
+                                  color: Colors.black,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
+                          ),
                   ),
                 ),
                 SizedBox(height: 30),
@@ -211,22 +213,19 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
                       side: BorderSide(color: Colors.black),
                       padding: EdgeInsets.symmetric(vertical: 15),
                     ),
-                    child:
-                        _isLoading
-                            ? CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.black,
-                              ),
-                            )
-                            : Text(
-                              'Verify',
-                              style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+                    child: _isLoading
+                        ? CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                          )
+                        : Text(
+                            'Verify',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
                             ),
+                          ),
                   ),
                 ),
               ],
