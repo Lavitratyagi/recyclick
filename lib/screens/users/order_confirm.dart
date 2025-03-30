@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:recyclick/screens/users/tracking.dart';
 
 class OrderConfirmationPage extends StatelessWidget {
+  final String orderId;
+
+  const OrderConfirmationPage({Key? key, required this.orderId})
+    : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +41,7 @@ class OrderConfirmationPage extends StatelessWidget {
                   SizedBox(height: 20),
                   // Thank you text.
                   Text(
-                    'Thankyou for your contribution',
+                    'Thank you for your contribution',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Montserrat',
@@ -45,7 +51,7 @@ class OrderConfirmationPage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 20),
-                  // Confirmation image (replace with your asset, e.g. a checkmark or similar).
+                  // Confirmation image.
                   Image.asset(
                     'assets/orderconfirmed.png',
                     height: 150,
@@ -54,7 +60,7 @@ class OrderConfirmationPage extends StatelessWidget {
                   SizedBox(height: 20),
                   // Order number.
                   Text(
-                    'Order Number : 123',
+                    'Order Number: $orderId',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Montserrat',
@@ -69,6 +75,13 @@ class OrderConfirmationPage extends StatelessWidget {
                     width: 200,
                     child: ElevatedButton(
                       onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => TrackingPage(orderId: orderId),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF1BA133),

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:recyclick/Api%20Service/api_service.dart';
 import 'package:recyclick/screens/users/product_specs.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final String verificationResponse; // Received from image upload page
 
   const ProductDetailsPage({Key? key, required this.verificationResponse})
-    : super(key: key);
+      : super(key: key);
 
   @override
   _ProductDetailsPageState createState() => _ProductDetailsPageState();
@@ -23,6 +24,24 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   final TextEditingController _colourController = TextEditingController();
 
   bool _isLoading = false;
+  int _aadharNumber = 0;
+
+  // Dropdown for "Type"
+  final List<String> _types = ['phone', 'laptop', 'keyboard', 'mouse', 'charger', 'other'];
+  String _selectedType = 'phone';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAadhar();
+  }
+
+  Future<void> _loadAadhar() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _aadharNumber = prefs.getInt('aadhar') ?? 0;
+    });
+  }
 
   Future<void> _submitDetails() async {
     if (!_formKey.currentState!.validate()) {
@@ -36,21 +55,38 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     final String imei = _imeiController.text;
     final String colour = _colourController.text;
     final String verificationResponse = widget.verificationResponse;
+    final String type = _selectedType;
 
     setState(() {
       _isLoading = true;
     });
 
     try {
-      // Call API service to submit product details.
-      final responseText = await ApiService().submitProductDetails(
+      // First, call submitProductDetails to get the AI model response.
+      final String aiResponse = await ApiService().submitProductDetails(
         company: company,
         model: model,
         variant: variant,
         imei: imei,
         colour: colour,
         verificationResponse: verificationResponse,
+        type: type, // Ensure your API service supports this parameter if needed.
       );
+
+      final String orderResponse = await ApiService().registerOrder(
+        aadhar: _aadharNumber,
+        imageUrl: verificationResponse, // assuming verificationResponse is the image URL
+        type: type,
+        company: company,
+        model: model,
+        variant: variant,
+        imei: imei,
+        color: colour,
+        status: 0, // Assuming status 0 means pending or initial
+      );
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('orderId', orderResponse);
 
       setState(() {
         _isLoading = false;
@@ -59,20 +95,19 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder:
-              (context) => ProductSpecsPage(
-                verificationResponse: verificationResponse,
-                productResponse: responseText,
-              ),
+          builder: (context) => ProductSpecsPage(
+            verificationResponse: verificationResponse,
+            productResponse: aiResponse,
+            orderId: orderResponse,
+          ),
         ),
       );
     } catch (e) {
       setState(() {
         _isLoading = false;
       });
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
     }
   }
 
@@ -133,6 +168,26 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     key: _formKey,
                     child: Column(
                       children: [
+                        // Dropdown for Type.
+                        DropdownButtonFormField<String>(
+                          value: _selectedType,
+                          decoration: InputDecoration(
+                            labelText: 'Type',
+                            border: OutlineInputBorder(),
+                          ),
+                          items: _types.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value[0].toUpperCase() + value.substring(1)),
+                            );
+                          }).toList(),
+                          onChanged: (newValue) {
+                            setState(() {
+                              _selectedType = newValue!;
+                            });
+                          },
+                        ),
+                        SizedBox(height: 15),
                         // Company Name field.
                         TextFormField(
                           controller: _companyController,
@@ -178,13 +233,21 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           },
                         ),
                         SizedBox(height: 15),
-                        // IMEI No. field (for phones).
+                        // IMEI No. field (for phones) - conditionally required.
                         TextFormField(
                           controller: _imeiController,
                           decoration: InputDecoration(
                             labelText: 'IMEI No. (for phones)',
                             border: OutlineInputBorder(),
                           ),
+                          validator: (value) {
+                            if (_selectedType == 'phone') {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter IMEI No.';
+                              }
+                            }
+                            return null;
+                          },
                         ),
                         SizedBox(height: 15),
                         // Colour field.
@@ -211,22 +274,21 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                               backgroundColor: Color(0xFF1BA133),
                               padding: EdgeInsets.symmetric(vertical: 15),
                             ),
-                            child:
-                                _isLoading
-                                    ? CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white,
-                                      ),
-                                    )
-                                    : Text(
-                                      'Submit',
-                                      style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
+                            child: _isLoading
+                                ? CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white,
                                     ),
+                                  )
+                                : Text(
+                                    'Submit',
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                           ),
                         ),
                       ],

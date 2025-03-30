@@ -5,11 +5,13 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 class ProductSpecsPage extends StatefulWidget {
   final String verificationResponse;
   final String productResponse;
+  final String orderId;
 
   const ProductSpecsPage({
     Key? key,
     required this.verificationResponse,
     required this.productResponse,
+    required this.orderId,
   }) : super(key: key);
 
   @override
@@ -19,9 +21,6 @@ class ProductSpecsPage extends StatefulWidget {
 class _ProductSpecsPageState extends State<ProductSpecsPage> {
   @override
   Widget build(BuildContext context) {
-    // Optionally, you can pre-process the strings to replace literal escape sequences.
-    // In many cases, if your backend sends text with "\n" and "\t", 
-    // MarkdownBody will render them appropriately.
     final String verificationData = widget.verificationResponse
         .replaceAll(r'\n', '\n')
         .replaceAll(r'\t', '\t');
@@ -143,7 +142,7 @@ class _ProductSpecsPageState extends State<ProductSpecsPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => OrderConfirmationPage(),
+                      builder: (context) => OrderConfirmationPage(orderId: widget.orderId),
                     ),
                   );
                 },

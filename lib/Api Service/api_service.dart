@@ -122,10 +122,10 @@ class ApiService {
     required String imei,
     required String colour,
     required String verificationResponse,
+    required String type,
   }) async {
     // Combine details into a single comma-separated string.
-    final details =
-        "$company,$model,$variant,$imei,$colour";
+    final details = "$company,$model,$variant,$imei,$colour";
 
     // Create URI with a single query parameter named "data".
     final uri = Uri.parse('$_baseUrl/ai/gist/' + details);
@@ -147,6 +147,7 @@ class ApiService {
     required String imei,
     required String colour,
     required String verificationResponse,
+    required String type,
   }) {
     return submitProductDetails(
       company: company,
@@ -155,6 +156,59 @@ class ApiService {
       imei: imei,
       colour: colour,
       verificationResponse: verificationResponse,
+      type: type,
     );
+  }
+
+  Future<String> registerOrder({
+    required int aadhar,
+    required String imageUrl,
+    required String type,
+    required String company,
+    required String model,
+    required String variant,
+    required String imei,
+    required String color,
+    required int status,
+  }) async {
+    final uri = Uri.parse(
+      '$_baseUrl/order/create',
+    ); // Adjust endpoint as needed.
+    final body = jsonEncode({
+      "aadhar": aadhar,
+      "image_url": imageUrl,
+      "type": type,
+      "company": company,
+      "model": model,
+      "variant": variant,
+      "imei": imei,
+      "color": color,
+      "status": status,
+    });
+
+    final response = await http.post(
+      uri,
+      headers: {"Content-Type": "application/json"},
+      body: body,
+    );
+    print(response.body);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return response.body;
+    } else {
+      throw Exception(
+        'Server error (${response.statusCode}): ${response.body}',
+      );
+    }
+  }
+  Future<int> fetchTrackingStatus({required String orderId}) async {
+    final uri = Uri.parse("$_baseUrl/track/$orderId/status");
+    final response = await http.get(uri);
+    print(response.body);
+    if (response.statusCode == 200) {
+      // Parse the response body into an integer.
+      return int.parse(response.body.trim());
+    } else {
+      throw Exception("Server error: ${response.statusCode} - ${response.body}");
+    }
   }
 }
