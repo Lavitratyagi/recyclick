@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart' as loc;
 import 'package:geocoding/geocoding.dart';
+import 'package:recyclick/screens/vendor/vendor_navbar.dart';
 
 class VendorLocationPage extends StatefulWidget {
   @override
@@ -157,7 +158,10 @@ class _VendorLocationPageState extends State<VendorLocationPage> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Add your navigation logic to proceed here.
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => VendorNavbar()),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF1BA133),

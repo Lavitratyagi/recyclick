@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:recyclick/screens/vendor/vendor_home.dart';
+import 'package:recyclick/screens/vendor/vendor_order.dart';
 
-class MainPage extends StatefulWidget {
+class VendorNavbar extends StatefulWidget {
   @override
-  _MainPageState createState() => _MainPageState();
+  _VendorNavbarState createState() => _VendorNavbarState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _VendorNavbarState extends State<VendorNavbar> {
   int _currentIndex = 0;
 
-  // Replace with your actual pages.
+  // List of proper pages.
   final List<Widget> _pages = [
-    Center(child: Text("Home Screen")),
-    Center(child: Text("Search Screen")),
-    Center(child: Text("Add Screen")),
-    Center(child: Text("Notifications")),
-    Center(child: Text("Profile")),
+    VendorHomePage(),
+    OrdersPage(),
+    ProfilePage(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true, // Extends the body behind the bottom nav bar.
+      extendBody: true, // Background extends behind the nav bar.
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.transparent, // Makes the nav bar transparent.
+        backgroundColor: Colors.transparent,
         elevation: 0,
         currentIndex: _currentIndex,
         onTap: (index) {
@@ -38,25 +38,33 @@ class _MainPageState extends State<MainPage> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline),
-            label: 'Add',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
+            icon: Icon(Icons.inbox), // Using an inbox icon as a placeholder for an open box cartoon.
+            label: "Open Box",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
-            label: 'Profile',
+            label: "Profile",
           ),
         ],
+      ),
+    );
+  }
+}
+
+// Example proper Profile Page.
+class ProfilePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // Optionally, add your own app bar and content here.
+      body: Center(
+        child: Text(
+          "This is the Profile Page",
+          style: TextStyle(fontFamily: 'Montserrat', fontSize: 24),
+        ),
       ),
     );
   }
