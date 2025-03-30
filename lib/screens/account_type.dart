@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:recyclick/screens/user_signup.dart';
+import 'package:recyclick/screens/users/user_signup.dart';
+import 'package:recyclick/screens/vendor/vendor_signup.dart';
 
 class AccountType extends StatefulWidget {
   @override
@@ -16,6 +17,11 @@ class _AccountTypeState extends State<AccountType> {
         context,
         MaterialPageRoute(builder: (context) => UserSignupPage()),
       );
+    } else if (_selectedAccountType == 'Vendor') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => VendorSignupPage()),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Proceed with $_selectedAccountType account')),
@@ -31,10 +37,7 @@ class _AccountTypeState extends State<AccountType> {
         fit: StackFit.expand,
         children: [
           // Full-screen background image
-          Image.asset(
-            'assets/main_bg.png',
-            fit: BoxFit.cover,
-          ),
+          Image.asset('assets/main_bg.png', fit: BoxFit.cover),
           // Overlay for the form
           SingleChildScrollView(
             child: Container(
@@ -66,10 +69,7 @@ class _AccountTypeState extends State<AccountType> {
                   RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 30,
-                      ),
+                      style: TextStyle(fontFamily: 'Montserrat', fontSize: 30),
                       children: [
                         TextSpan(
                           text: 'type. of. ',
@@ -94,25 +94,26 @@ class _AccountTypeState extends State<AccountType> {
                       children: [
                         // Each radio button option wrapped in its own outlined container
                         Column(
-                          children: accountTypes.map((type) {
-                            return Container(
-                              margin: EdgeInsets.symmetric(vertical: 5),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: RadioListTile<String>(
-                                title: Text(type),
-                                value: type,
-                                groupValue: _selectedAccountType,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedAccountType = value!;
-                                  });
-                                },
-                              ),
-                            );
-                          }).toList(),
+                          children:
+                              accountTypes.map((type) {
+                                return Container(
+                                  margin: EdgeInsets.symmetric(vertical: 5),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: RadioListTile<String>(
+                                    title: Text(type),
+                                    value: type,
+                                    groupValue: _selectedAccountType,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _selectedAccountType = value!;
+                                      });
+                                    },
+                                  ),
+                                );
+                              }).toList(),
                         ),
                         SizedBox(height: 20),
                         // Proceed button

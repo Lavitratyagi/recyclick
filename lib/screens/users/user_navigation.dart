@@ -24,7 +24,7 @@ class _UserHomePageState extends State<UserHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Display the current page.
+      extendBody: true,
       body: _pages[_currentIndex],
       // Transparent bottom navigation bar with 5 icons.
       bottomNavigationBar: BottomNavigationBar(
