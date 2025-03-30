@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:recyclick/screens/users/add_item.dart';
 import 'package:recyclick/screens/users/home.dart';
+import 'package:recyclick/screens/users/tracking.dart';
 import 'package:recyclick/screens/users/user_profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserHomePage extends StatefulWidget {
   @override
@@ -12,14 +14,33 @@ class _UserHomePageState extends State<UserHomePage> {
   // Set default index to 2 so that the PlusPage is the initial screen.
   int _currentIndex = 2;
 
+  Future<String> orderid() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('orderId') ?? '';
+  }
+  String orderId = '';
   // List of pages for the bottom navigation bar.
-  final List<Widget> _pages = [
-    HomePage(), // Home page placeholder
-    RewardScreen(), // Reward page placeholder
-    AddItemPage(), // Plus page (custom page)
-    PinScreen(), // Pin page placeholder
-    UserProfilePage(), // Account page placeholder
-  ];
+  late List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeOrderId();
+  }
+
+  Future<void> _initializeOrderId() async {
+    final id = await orderid();
+    setState(() {
+      orderId = id;
+      _pages = [
+        HomePage(), // Home page placeholder
+        RewardScreen(), // Reward page placeholder
+        AddItemPage(), // Plus page (custom page)
+        TrackingPage(orderId: orderId), // Pin page placeholder
+        UserProfilePage(), // Account page placeholder
+      ];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
