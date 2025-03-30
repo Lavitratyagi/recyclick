@@ -83,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
         fit: StackFit.expand,
         children: [
           // Full-screen background image.
-          Image.asset('assets/main_bg.png', fit: BoxFit.cover),
+          Image.asset('assets/bg.png', fit: BoxFit.cover),
           // Overlay for the login form.
           SingleChildScrollView(
             child: Container(

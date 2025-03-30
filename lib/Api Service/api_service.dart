@@ -1,6 +1,9 @@
 // api_service.dart
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:mime/mime.dart';
+import 'package:http_parser/http_parser.dart';
 
 class ApiService {
   // Base URL defined directly.
@@ -62,6 +65,53 @@ class ApiService {
     } catch (e) {
       print('Login exception: $e');
       return false;
+    }
+  }
+
+  Future<String> verifyPhotos({
+    required File frontImage,
+    required File backImage,
+  }) async {
+    final uri = Uri.parse('$_baseUrl/ai/image'); // Adjust endpoint as needed.
+    final request = http.MultipartRequest('POST', uri);
+
+    try {
+      // Determine MIME type for the front image.
+      final frontMimeType =
+          lookupMimeType(frontImage.path) ?? 'application/octet-stream';
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'file', // Using "file" as the field name for both images.
+          frontImage.path,
+          contentType: MediaType.parse(frontMimeType),
+        ),
+      );
+
+      // Determine MIME type for the back image.
+      final backMimeType =
+          lookupMimeType(backImage.path) ?? 'application/octet-stream';
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'file', // Using "file" as the field name for both images.
+          backImage.path,
+          contentType: MediaType.parse(backMimeType),
+        ),
+      );
+
+      // Send the multipart request.
+      final response = await request.send();
+      final responseString = await response.stream.bytesToString();
+      print(responseString);
+      // Check the response status.
+      if (response.statusCode == 200) {
+        return responseString; // Return the backend's text response.
+      } else {
+        throw Exception(
+          'Server error (${response.statusCode}): $responseString',
+        );
+      }
+    } catch (e) {
+      throw Exception('Network error: ${e.toString()}');
     }
   }
 }

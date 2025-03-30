@@ -1,6 +1,8 @@
+// photo_upload_page.dart
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:recyclick/Api%20Service/api_service.dart';
 import 'package:recyclick/screens/users/product_details.dart';
 
 class PhotoUploadPage extends StatefulWidget {
@@ -11,6 +13,7 @@ class PhotoUploadPage extends StatefulWidget {
 class _PhotoUploadPageState extends State<PhotoUploadPage> {
   File? _frontImage;
   File? _backImage;
+  bool _isLoading = false; // For showing progress indicator
 
   final ImagePicker _picker = ImagePicker();
 
@@ -36,6 +39,38 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
     }
   }
 
+  Future<void> _verifyPhotos() async {
+    // Validate that both images have been selected.
+    if (_frontImage == null || _backImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please upload both front and back images.')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    // Initialize the API service.
+    final apiService = ApiService();
+    // Call the API to verify photos.
+    final responseText = await apiService.verifyPhotos(
+      frontImage: _frontImage!,
+      backImage: _backImage!,
+    );
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    // After receiving the response, navigate to the next page.
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ProductDetailsPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +79,7 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
         fit: StackFit.expand,
         children: [
           // Full-screen background image.
-          Image.asset('assets/user_bg.png', fit: BoxFit.cover),
+          Image.asset('assets/bg.png', fit: BoxFit.cover),
           // Content overlay with scrolling support.
           SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
@@ -166,32 +201,32 @@ class _PhotoUploadPageState extends State<PhotoUploadPage> {
                   ),
                 ),
                 SizedBox(height: 30),
-                // Verify button (functionality not implemented).
+                // Verify button.
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProductDetailsPage(),
-                        ),
-                      );
-                    },
+                    onPressed: _verifyPhotos,
                     style: OutlinedButton.styleFrom(
                       backgroundColor: Colors.white.withOpacity(0.6),
                       side: BorderSide(color: Colors.black),
                       padding: EdgeInsets.symmetric(vertical: 15),
                     ),
-                    child: Text(
-                      'Verify',
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
+                    child:
+                        _isLoading
+                            ? CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.black,
+                              ),
+                            )
+                            : Text(
+                              'Verify',
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
                   ),
                 ),
               ],
