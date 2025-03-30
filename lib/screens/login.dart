@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:recyclick/Api%20Service/api_service.dart';
 import 'package:recyclick/screens/account_type.dart';
 import 'package:recyclick/screens/users/user_navigation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -58,6 +59,10 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (success) {
+      // Store the Aadhar number in local storage.
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('aadhar', aadhar);
+
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => UserHomePage()),
