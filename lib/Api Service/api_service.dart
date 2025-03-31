@@ -191,7 +191,10 @@ class ApiService {
       headers: {"Content-Type": "application/json"},
       body: body,
     );
-    print(response.body);
+    var order = jsonDecode(response.body);
+    final vendoralot = Uri.parse('$_baseUrl/add/vendor/$order');
+    final response2 = await http.get(vendoralot);
+
     if (response.statusCode == 200 || response.statusCode == 201) {
       return response.body;
     } else {
@@ -200,6 +203,7 @@ class ApiService {
       );
     }
   }
+
   Future<int> fetchTrackingStatus({required String orderId}) async {
     final uri = Uri.parse("$_baseUrl/track/$orderId/status");
     final response = await http.get(uri);
@@ -208,7 +212,22 @@ class ApiService {
       // Parse the response body into an integer.
       return int.parse(response.body.trim());
     } else {
-      throw Exception("Server error: ${response.statusCode} - ${response.body}");
+      throw Exception(
+        "Server error: ${response.statusCode} - ${response.body}",
+      );
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getVendorOrders() async {
+    final uri = Uri.parse('$_baseUrl/get/vendor');
+    final response = await http.get(uri);
+    print(response.body);
+    if (response.statusCode == 200) {
+      // Assuming your backend returns a JSON array of order objects.
+      final List<dynamic> data = jsonDecode(response.body);
+      return List<Map<String, dynamic>>.from(data);
+    } else {
+      throw Exception('Error: ${response.statusCode} - ${response.body}');
     }
   }
 }
